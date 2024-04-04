@@ -5,6 +5,7 @@ import { View } from "react-native";
 import { Button, Snackbar, Text, TextInput } from "react-native-paper";
 import { auth } from "../configs/firebaseConfig";
 import { styles } from "../theme/styles";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 interface RegisterForm {
   email: string;
@@ -18,6 +19,12 @@ interface MessageSnackBar{
 }
 
 export const RegisterScreen = () => {
+  //Hook de navegacion
+  const navigation=useNavigation()
+
+  //Hook para mostrar la contrasena
+  const [hiddenPassword, setHiddenPassword] = useState(true)
+
   //Hook useState: trabajar con el estado del formulario
   const [registerForm, setRegisterForm] = useState<RegisterForm>({
     email: "",
@@ -82,7 +89,8 @@ export const RegisterScreen = () => {
         mode="outlined"
         label="Contraseña"
         placeholder="Escribe tu contraseña"
-        secureTextEntry
+        secureTextEntry={hiddenPassword}
+        right={<TextInput.Icon icon="eye" onPress={()=>setHiddenPassword(!hiddenPassword)} />}
         style={styles.inputs}
         onChangeText={(value) => handlerSetRegisterForm("password", value)}
       />
@@ -100,6 +108,12 @@ export const RegisterScreen = () => {
       >
         {messageSnackBar.message}
       </Snackbar>
+      <Text 
+        style={styles.textNavigation}
+        onPress={()=>navigation.dispatch(CommonActions.navigate({name:'Login'}))}
+        >
+        Ya tienes una cuenta? Inicia sesión
+      </Text>
     </View>
   );
 };
