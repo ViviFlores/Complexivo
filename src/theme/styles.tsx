@@ -28,6 +28,33 @@ export const styles = StyleSheet.create({
     flexDirection:'row',
     gap: 15,
     alignItems:'center'
-  }
-
+  },
+  icon:{
+    flex:1,
+    alignItems:'flex-end'
+  },
+  modalProfile:{
+    paddingHorizontal:20,
+    paddingVertical:20,
+    backgroundColor:'#fff',
+    marginHorizontal:20,
+    borderRadius: 10,
+  },
+  headerModal:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between'
+  },
+  contentLetter:{
+    flexDirection:'row',
+    paddingHorizontal:10,
+    paddingVertical:30,
+    alignItems:'center',
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 10,
+    bottom: 10,
+  },
 });

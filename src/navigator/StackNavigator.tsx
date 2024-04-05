@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
-import { HomeScreen } from '../screens/HomeScreen';
+import { HomeScreen } from '../screens/HomeScreen/HomeScreen';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../configs/firebaseConfig';
