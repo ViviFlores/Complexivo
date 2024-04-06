@@ -65,6 +65,12 @@ export const styles = StyleSheet.create({
   },
   subjectLetter:{
     flexDirection:'row',
-    alignItems:'center'
+    alignItems:'center',
+    gap:10
+  },
+  textMessage:{
+    marginBottom:10,
+    fontWeight:'bold',
+    fontSize:18
   }
 });

@@ -23,7 +23,7 @@ export const LetterCardComponent = ({letter}:Props) => {
         <IconButton
             icon="email-open"
             size={25}
-            onPress={() => navigation.dispatch(CommonActions.navigate({name:'Detail'}))}
+            onPress={() => navigation.dispatch(CommonActions.navigate({name:'Detail', params:{letter}}))}
         />
         </View>
     </View>
