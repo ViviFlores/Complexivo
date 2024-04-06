@@ -3,10 +3,11 @@ import { FlatList, View } from 'react-native'
 import { Avatar, Button, Divider, FAB, IconButton, Modal, Portal, Text, TextInput } from 'react-native-paper'
 import { styles } from '../../theme/styles';
 import { updateProfile } from 'firebase/auth';
-import { auth } from '../../configs/firebaseConfig';
+import { auth, dbRealTime } from '../../configs/firebaseConfig';
 import firebase from 'firebase/auth'
 import { LetterCardComponent } from './components/LetterCardComponent';
 import { NewLetterComponent } from './components/NewLetterComponent';
+import { onValue, ref } from 'firebase/database';
 
 //Interface que nos ayude a trabajar con los datos del usuario - nombre
 interface UserForm {
@@ -14,7 +15,7 @@ interface UserForm {
 }
 
 //Interface para trabajar la data de la carta
-interface Letter {
+export interface Letter {
   id: string,
   to: string,
   subject: string,
@@ -37,14 +38,13 @@ export const HomeScreen = () => {
   const [userAuth, setUserAuth] = useState<firebase.User | null>(null)
 
   //Hook useState: tomar la lista de cartas
-  const [letters, setLetters] = useState<Letter[]>([
-    {id: '1', to:'Ariel Ron', subject: 'Complexivo', message:'Estudiar para el 18 de abril 2024'}
-  ])  
+  const [letters, setLetters] = useState<Letter[]>([])
 
   //Hook useEffect: Capturar la data del usuario logueado
   useEffect(() => {
     setUserAuth(auth.currentUser) //datos del usuario logueado
     setUserForm({ name: auth.currentUser?.displayName ?? '' })
+    getAllLetters()
   }, [])
 
   //Funcion  para tomar los datos del formulario y actualizar la data
@@ -61,6 +61,21 @@ export const HomeScreen = () => {
     }
     //console.log(userForm);
     setShowModalProfile(false)
+  }
+
+  //funcion para obtener las cartas almacenadas
+  const getAllLetters = () => {
+    const dbRef = ref(dbRealTime, 'letters')
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val()
+      const getKeys = Object.keys(data)
+      const listLetters: Letter[] = []
+      getKeys.forEach((key) => {
+        const value = { ...data[key], id: key }
+        listLetters.push(value)
+      })
+      setLetters(listLetters)
+    })
   }
 
   return (
@@ -84,13 +99,13 @@ export const HomeScreen = () => {
         <View>
           <FlatList
             data={letters}
-            renderItem={({ item }) => <LetterCardComponent/>}
+            renderItem={({ item }) => <LetterCardComponent letter={item} />}
             keyExtractor={item => item.id}
           />
         </View>
       </View>
       <Portal>
-        <Modal visible={showModalProfile} contentContainerStyle={styles.modalProfile}>
+        <Modal visible={showModalProfile} contentContainerStyle={styles.modal}>
           <View style={styles.headerModal}>
             <Text variant='headlineLarge'>Mi Perfil</Text>
             <IconButton icon='close' onPress={() => setShowModalProfile(false)} />
@@ -116,9 +131,9 @@ export const HomeScreen = () => {
       <FAB
         icon="plus"
         style={styles.fab}
-        onPress={() => console.log('Pressed')}
+        onPress={() => setShowModalLetter(true)}
       />
-      <NewLetterComponent visible={showModalLetter} setVisible={setShowModalLetter}/>
+      <NewLetterComponent visible={showModalLetter} setVisible={setShowModalLetter} />
     </>
   )
 }

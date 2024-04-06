@@ -8,11 +8,14 @@ import { auth } from '../configs/firebaseConfig';
 import { View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { styles } from '../theme/styles';
+import { DetailLetterScreen } from '../screens/HomeScreen/DetailLetterScreen';
 
 //Interface : definir las propiedades de las rutas
 interface Routes {
     name: string,
-    screen: () => JSX.Element //elemento JSX
+    screen: () => JSX.Element, //elemento JSX
+    headerShow?:boolean,
+    title?: string
 }
 
 const Stack = createStackNavigator();
@@ -45,9 +48,9 @@ export const StackNavigator = () => {
 
     //Arreglo de rutas para el usuario que esta autenticado
     const routesAuth: Routes[] = [
-        { name: "Home", screen: HomeScreen }
+        { name: "Home", screen: HomeScreen },
+        { name: "Detail", screen: DetailLetterScreen, headerShow:true, title: 'Detalle carta'}
     ]
-
 
     return (
         <>
@@ -65,7 +68,7 @@ export const StackNavigator = () => {
                                 ))
                                 :
                                 routesAuth.map((item, index) => (
-                                    <Stack.Screen key={index} name={item.name} options={{ headerShown: false }} component={item.screen} />
+                                    <Stack.Screen key={index} name={item.name} options={{ headerShown: item.headerShow ?? false, title: item.title }} component={item.screen} />
                                 ))
                         }
 
